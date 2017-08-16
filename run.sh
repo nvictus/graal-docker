@@ -1,8 +1,11 @@
 #!/bin/bash
-IMG_NAME="graal"
-COMMAND="/bin/bash"
+DATADIR=data
 xhost +
-nvidia-docker run --privileged --rm \
+nvidia-docker run \
+	--privileged \
+	--rm \
 	--volume /tmp/.X11-unix:/tmp/.X11-unix:ro \
+	--volume $DATADIR:/data \
     --env DISPLAY=$DISPLAY \
-    -it $IMG_NAME $COMMAND \
+    --name graal \
+    -it graal /bin/bash \

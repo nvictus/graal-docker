@@ -1,0 +1,20 @@
+name: graal
+channels:
+    - conda-forge
+    - defaults
+    - bioconda
+dependencies:
+    - python=2.7
+    - gcc
+    - libgcc
+    - numpy
+    - scipy
+    - matplotlib
+    - cython
+    - pandas
+    - h5py
+    - ipython
+    - PIL
+    - pip:
+        - pyopengl
+        - pyopengl-accelerate
