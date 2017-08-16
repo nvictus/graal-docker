@@ -1,0 +1,4 @@
+examples/fasta/*.fa filter=lfs diff=lfs merge=lfs -text
+examples/fasta/*.fsa filter=lfs diff=lfs merge=lfs -text
+examples/S1/*.txt filter=lfs diff=lfs merge=lfs -text
+examples/tricho_qm6a/*.txt filter=lfs diff=lfs merge=lfs -text
