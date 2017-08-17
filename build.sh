@@ -1,8 +1,9 @@
 #!/bin/bash
-IMG_NAME="graal"
-#nvidia-docker build -t $IMG_NAME .
-#nvidia-docker run $IMG_NAME './build_pycuda.sh'
-CONTAINER=$(docker ps -l -q | head -n 1)
-#docker cp examples $CONTAINER:scratch/
-docker cp examples/HindIII-all $CONTAINER:scratch/input_data
-nvidia-docker commit $CONTAINER graal
+nvidia-docker build -t graal .
+
+# manual edit examples
+# --------------------
+# nvidia-docker cp xyz graal:xyz/
+# nvidia-docker run --name graal-container -it graal /bin/bash
+# nvidia-docker commit graal-container graal
+# docker stop graal-container; docker rm graal-container

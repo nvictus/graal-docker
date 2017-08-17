@@ -8,6 +8,7 @@ RUN echo "Package: gnome*\nPin: release *\nPin-Priority: -1" >> /etc/apt/prefere
 # install general stuff
 RUN apt-get update && apt-get install -y \
         software-properties-common \
+        apt-transport-https \
         build-essential \
         ca-certificates \
         checkinstall \
@@ -17,7 +18,13 @@ RUN apt-get update && apt-get install -y \
         git \
         swig \
         wget \
-        curl
+        curl \
+        vim
+
+# install sublime text
+RUN wget -qO - https://download.sublimetext.com/sublimehq-pub.gpg | apt-key add - && \
+    echo "deb https://download.sublimetext.com/ apt/stable/" | tee /etc/apt/sources.list.d/sublime-text.list
+RUN apt-get update && apt-get install sublime-text
 
 # install x11 support
 RUN apt-get install -qqy x11-apps
@@ -27,16 +34,20 @@ RUN add-apt-repository --yes ppa:nilarimogard/webupd8
 RUN apt-get update && apt-get install -y \
         gtk2.0 \
         libgtk2.0-dev \
-        libwebkitgtk-dev \
-        libcanberra-gtk-module \
-        libsdl1.2-dev \
-        libgstreamer-plugins-base0.10-dev \
+        libwxbase2.8-0 \
+        libwxbase2.8-dbg \
+        libwxbase2.8-dev \
+        libwxgtk-media2.8-0 \
+        libwxgtk-media2.8-dbg \
+        libwxgtk-media2.8-dev \
+        libwxgtk2.8-0 \
         libwxgtk2.8-dev \
         libwxgtk2.8-dbg \
+        libsdl1.2-dev \
         libjpeg-dev \
         libtiff-dev \
         freeglut3 \
-        freeglut3-dev 
+        freeglut3-dev
 
 # install conda and build environment
 RUN curl -LO http://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh && \
@@ -55,7 +66,7 @@ RUN conda config --set always_yes yes --set changeps1 no && \
     conda env update -q -n root --file environment.yml && \
     conda clean --tarballs --index-cache --lock
 
-# build and install wxPython 2.8 with opengl support
+# build and install wxPython 2.8 with openGL support
 COPY dependencies/wxPython-src-2.8.12.1.tar.bz2 .
 RUN tar -xvf wxPython-src-2.8.12.1.tar.bz2 && \
     cd wxPython-src-2.8.12.1 && \
@@ -76,13 +87,11 @@ RUN tar -xvf wxPython-src-2.8.12.1.tar.bz2 && \
         --with-libtiff=builtin \
         --with-regex=builtin \
         --with-zlib=builtin \
-        #--enable-rpath="$ORIGIN/../lib" \
-        #--prefix="$PREFIX" \
     && make
 RUN cd wxPython-src-2.8.12.1/wxPython && python setup.py build_ext --inplace
 ENV PYTHONPATH /wxPython-src-2.8.12.1/wxPython:$PYTHONPATH
 
-# install pycuda with opengl support
+# install pycuda with openGL support
 COPY dependencies/pycuda-2017.1.1.tar.gz .
 RUN tar -xvf pycuda-2017.1.1.tar.gz && \
     cd pycuda-2017.1.1 && \
