@@ -34,7 +34,9 @@ extern "C"
         float v_inter __attribute__ ((packed));
     } param_simu;
 
-
+//https://stackoverflow.com/questions/37566987/cuda-atomicadd-for-doubles-definition-error
+#if !defined(__CUDA_ARCH__) || __CUDA_ARCH__ >= 600
+#else
     __device__ double atomicAdd(double* address, double val)
     {
         unsigned long long int* address_as_ull = (unsigned long long int*)address;
@@ -47,6 +49,7 @@ extern "C"
         } while (assumed != old);
         return __longlong_as_double(old);
     }
+#endif
     __global__ void init_rng(int nthreads, curandState *s, unsigned long long seed, unsigned long long offset)
     {
             int id = blockIdx.x*blockDim.x + threadIdx.x;
